@@ -1,14 +1,13 @@
 package ua.romanik.vladislav.dogsandcats.presentation.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import ua.romanik.vladislav.dogsandcats.R
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import ua.romanik.vladislav.dogsandcats.R
 import ua.romanik.vladislav.dogsandcats.databinding.ActivityMainBinding
 import ua.romanik.vladislav.dogsandcats.presentation.ui.cats_list.CatsFragment
 import ua.romanik.vladislav.dogsandcats.presentation.ui.dogs_list.DogsFragment
@@ -47,16 +46,19 @@ class MainActivity : AppCompatActivity() {
         savedInstanceState?.let {
             binding.tabLayout.getTabAt(it.getInt(SELECTED_TAB))?.select()
         } ?: changeScreen(catsFragment)
-        supportFragmentManager.addOnBackStackChangedListener {
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(SELECTED_TAB, binding.tabLayout.selectedTabPosition)
+        super.onSaveInstanceState(outState)
+    }
+
+    fun showTabs(isShow: Boolean = true) {
+        binding.tabLayout.visibility = if (isShow) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
-        /*supportFragmentManager.beginTransaction()
-            .replace(
-                R.id.flContainer,
-                MainFragment.newInstance(),
-                MainFragment::class.java.name)
-            .addToBackStack(MainFragment::class.java.name)
-            .commit()*/
     }
 
     fun changeScreen(fragment: Fragment) {
@@ -78,10 +80,5 @@ class MainActivity : AppCompatActivity() {
             )
             .addToBackStack(fragment::javaClass.name)
             .commit()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(SELECTED_TAB, binding.tabLayout.selectedTabPosition)
-        super.onSaveInstanceState(outState)
     }
 }
